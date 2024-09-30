@@ -32,26 +32,30 @@ double howMuchSorted(const std::vector<int>& arr) {
     int sortedCount = 0;
     int totalComparisons = arr.size() - 1;
 
+    if (arr.size() == 1) {
+        return 1.0;  // Consider a single element as fully sorted
+    }
+
     for (size_t i = 1; i < arr.size(); i++) {
         if (arr[i] >= arr[i - 1]) {
             sortedCount++;
         }
     }
 
-    return (static_cast<double>(sortedCount) / totalComparisons) * 100;
+    return (static_cast<double>(sortedCount) / totalComparisons);
 }
 
 void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *result)
 {
     while(!pManager->finished){
-        seq = getPermutation(seq, 100000);
+        seq = getPermutation(seq, std::rand() % factorial(seq.size()));
 
         double percentFinished = howMuchSorted(seq);
 
          // Exemple de mise à jour de la barre de progression
         pManager->incrementPercentComputed(percentFinished);
 
-        if(percentFinished == 100.0){
+        if(percentFinished == 1.0){
 
             pManager->finished = true;
 
