@@ -48,7 +48,6 @@ void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *resul
     srand (time(NULL));
 
     int maxSequences = factorial(seq.size());
-    double lastProgress = 0;
 
     while(!pManager->finished){
 
@@ -58,13 +57,11 @@ void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *resul
 
         double percentFinished = howMuchSorted(seq);
 
-        if (percentFinished > lastProgress) {
+        if (percentFinished > pManager->lastProgress) {
            pManager->incrementPercentComputed(percentFinished);
-           lastProgress = percentFinished;
         }
 
         if(percentFinished > 0.99){
-
             pManager->finished = true;
 
             for(size_t i = 0; i < seq.size(); i++)

@@ -58,6 +58,9 @@ public:
     /** To indicate that one thread has sinished **/
     bool finished{false};
 
+    /** To indicate the highest calculated progress so far **/
+    double lastProgress{0};
+
 signals:
     /**
      * @brief sig_incrementPercentComputed signal qui indique que le pourcentage

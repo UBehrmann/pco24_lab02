@@ -59,14 +59,10 @@ std::vector<int> ThreadManager::startSorting(
 
 void ThreadManager::incrementPercentComputed(double percentComputed)
 {
-    static double highest = 0;
-
-    if(percentComputed > highest) {
-        double increment = percentComputed - highest;
-        highest = percentComputed;
-        emit sig_incrementPercentComputed(increment);
-        if (highest > 0.99) {
-            highest = 0.;
-        }
+    double increment = percentComputed - lastProgress;
+    lastProgress = percentComputed;
+    emit sig_incrementPercentComputed(increment);
+    if (lastProgress > 0.99) {
+        lastProgress = 0.0;
     }
 }
