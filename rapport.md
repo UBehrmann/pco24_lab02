@@ -2,6 +2,8 @@
 
 # Laboratoire 2 - Bogosort <!-- omit from toc -->
 
+Calum Quinn - Urs Behrmann
+
 ## Table des matières
 
 - [Table des matières](#table-des-matières)
@@ -40,17 +42,13 @@ Le thread ayant trouvé la solution la met dans la variable partagée pour récu
 
 ### Calcul du pourcentage effectué
 
-Le calcul du pourcentage se fait à chaque nouvelle permutation et consiste à contrôler combien des éléments sont placés correctement par rapport à leur voisin direct.
-Ceci est effectué en itérant à travers la séquence et en augmentant un compteur à chaque fois qu'une valeur est plus grande que le précédent.
-Ceci veut dire que la progression totale dépend de l'addition de plusieurs petites parties de la séquence au contraire du placement finale des éléments qui serait beaucoup plus long a calculé et reviendrait à trier la séquence.
+Le calcul du pourcentage se fait environ à chaque pourcent d'avancement d'un thread. C'est-à-dire qu'il envoit un incrément de 0.1 à chaque fois qu'un pourcent des permutations a été vérifié.
+
 
 ### Mise à jour de la barre de progression
 
-La barre de progression est mise à jour à chaque fois qu'un thread trouve une séquence plus trié que la précédente plus triée.
-Ceci se fait en comparant le pourcentage trié par rapport à la valeur partagée dernièrement modifiée.
-
-Une fois qu'une séquence plus triée est trouvée, le pourcentage et envoyé au thread manager qui lui émet un signal au mainWindow pour mettre à jour l'affichage.
-Le signal envoyé doit être la différence par rapport au dernier affichage donc l'incrément est calculé en la différence entre la dernière plus triée et la valeur actuelle.
+La barre de progression est mise à jour à chaque fois qu'un incrément est envoyé par un thread. Le thread envoi son incrément de 0.1 au ThreadManager qui lui le relaie à l'UI.
+Avant de faire ça le manager doit adapté le pourcentage pour qu'il soit en rapport avec le pourcentage total. Il doit donc diviser l'incrément par le nombre de threads car ils ont chacun le même nombre de permutations à vérifier.
 
 
 ## Tests effectués
@@ -60,12 +58,9 @@ Le signal envoyé doit être la différence par rapport au dernier affichage don
 Il a fallu contrôler que l'algorithme de tri implémenté fonctionne réellement.
 Pour ceci nous avons effectué de nombreux tri en contrôlant le résultat final.
 
-Nous avons aussi contrôler le calcul du pourcentage effectué par un procédé similaire.
-En mode debug nous nous sommes arrêté après le calcul du pourcentage et avons contrôlé la valeur par rapport à la séquence.
-
 ### Affichage
 
-Lors du tri nous avons vérifié que la barre de progression s'incrémente petit à petit et que les valeurs correspondent réellement à la séquence la plus triée.
+Lors du tri nous avons vérifié que la barre de progression s'incrémente petit à petit et que les valeurs correspondent réellement à l'avance dans le contrôle des différentes permutations.
 
 ### Reset
 

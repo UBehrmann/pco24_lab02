@@ -29,18 +29,28 @@ std::vector<int> ThreadManager::startSorting(
     finished = false;
     QVector<int> result;
     std::vector<int> finalResult;
+    this->nbThreads = nbThreads;
     
     // TODO création des threads et du vecteur de résultats
     // TODO lancement des threads avec la fonction Bogosort
     // TODO arrêt des threads et récupération du tableau trié
     // TODO retourner le tableau trié
 
+    int maxSequences = factorial(seq.size());
+    int sequencesPerThread = maxSequences / nbThreads;
+
     for(unsigned int i = 0; i < nbThreads; i++){
+        int start = i * sequencesPerThread;
+        int end = (i == nbThreads - 1)? maxSequences : (i + 1) * sequencesPerThread;
+
         threads[i] = new PcoThread(
                     bogosort,
                     seq,
                     this,
-                    &result
+                    &result,
+                    start,
+                    end,
+                    maxSequences
                     );
     }
 
@@ -50,19 +60,23 @@ std::vector<int> ThreadManager::startSorting(
     }
 
     for(int num : result)
-        finalResult.push_back(num);
+            finalResult.push_back(num);
 
 
     return finalResult;
 }
 
 
-void ThreadManager::incrementPercentComputed(double percentComputed)
+void ThreadManager::incrementPercentComputed(double increment)
 {
-    double increment = percentComputed - lastProgress;
-    lastProgress = percentComputed;
-    emit sig_incrementPercentComputed(increment);
-    if (lastProgress > 0.99) {
-        lastProgress = 0.0;
+    emit sig_incrementPercentComputed(increment / nbThreads);
+}
+
+// Helper function to calculate factorial
+int ThreadManager::factorial(int n)
+{
+    if (n < 0 ) {
+        return 0;
     }
+    return !n ? 1 : n * factorial(n - 1);
 }

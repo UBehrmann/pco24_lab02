@@ -37,6 +37,13 @@ public:
     ThreadManager(QObject *parent);
 
     /**
+     * @brief factorial
+     * @param n number of which to calculate the factorial
+     * @return factorial of n
+     */
+    int factorial(int n);
+
+    /**
      * @brief startSorting tâche qui s'occupe de générer la séquence à trier et de
      * démarrer le tri.
      * @param seq séquence à trier
@@ -58,8 +65,8 @@ public:
     /** To indicate that one thread has sinished **/
     bool finished{false};
 
-    /** To indicate the highest calculated progress so far **/
-    double lastProgress{0};
+private:
+    unsigned int nbThreads;
 
 signals:
     /**
