@@ -19,7 +19,12 @@ std::vector<int> getPermutation(std::vector<int> sequence, int k, int fact) {
     return permutation;
 }
 
-void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *result, int start, int end, int maxSequences)
+void bogosort(std::vector<int> seq, 
+                ThreadManager* pManager, 
+                QVector<int> *result, 
+                const int start,
+                const int end,
+                const int maxSequences)
 {
     std::vector<int> permutedSeq(seq.size());
 
@@ -31,10 +36,20 @@ void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *resul
         }
 
         if (std::is_sorted(permutedSeq.begin(), permutedSeq.end())) {
-            pManager->finished = true;
-            for (size_t i = 0; i < permutedSeq.size(); i++) {
-                result->append(permutedSeq[i]);
+
+            pManager->finished.store(true);
+
+            pManager->qMutex.lock();
+
+            if(result->size() == 0){
+
+                for (size_t i = 0; i < permutedSeq.size(); i++) {
+                    result->append(permutedSeq[i]);
+                }
             }
+
+            pManager->qMutex.unlock();
+
             break;
         }
     }

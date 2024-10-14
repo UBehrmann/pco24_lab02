@@ -22,6 +22,12 @@
  * @param seq séquence à trier
  * @param pManager Pointeur sur le ThreadManager utilisé pour accéder à l'interface
  */
-void bogosort(std::vector<int> seq, ThreadManager* pManager, QVector<int> *result, int start, int end, int fact);
+void bogosort(std::vector<int> seq,
+              ThreadManager* pManager,
+              QVector<int> *result,
+              const int start,
+              const int end,
+              const int maxSequences
+              );
 
 #endif // MYTHREAD_H

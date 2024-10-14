@@ -16,7 +16,6 @@ Calum Quinn - Urs Behrmann
 	- [Tri](#tri)
 	- [Affichage](#affichage)
 	- [Reset](#reset)
-- [Chapitre exemple](#chapitre-exemple)
 
 ## Introduction au problème
 
@@ -36,20 +35,23 @@ Nos choix d'implémentation se séparent en plusieurs catégories.
 Pour la gestion des threads le format est assez basique, créer tous les threads demandés, laisser effectué le bogosort passé en paramètre et supprimer tous les threads.
 
 Ce qui a requis plus de réflexion est la récupération du tableau trié ainsi que l'arrêt des autres threads n'ayant pas encore trouvé la solution.
+
 Pour ça nous avons passé en paramètre du bogosort, à la création de chaque thread, une variable partagée pour stocker le résultat.
-Lorsqu'un thread trouve la séquence triée, il "l'annonce au thread manager" en changeant la valeur d'une variable partagée et ceci arrête les autres threads qui obtiennent l'information que la solution a été trouvée.
+
+Lorsqu'un thread trouve la séquence triée, il "l'annonce au thread manager" en changeant la valeur d'une variable partagée et ceci arrête les autres threads qui obtiennent l'information que la solution a été trouvée. Cette variable est un atomic booléen pour éviter les problèmes de concurrence.
+
 Le thread ayant trouvé la solution la met dans la variable partagée pour récupération par le thread manager.
+
+Pour ne pas avoir de problème lorsque deux ou plus de thread ont trouvé la solution en même temps, nous avons mis un *qmutex* pour protéger la variable partagée.
 
 ### Calcul du pourcentage effectué
 
 Le calcul du pourcentage se fait environ à chaque pourcent d'avancement d'un thread. C'est-à-dire qu'il envoit un incrément de 0.1 à chaque fois qu'un pourcent des permutations a été vérifié.
 
-
 ### Mise à jour de la barre de progression
 
 La barre de progression est mise à jour à chaque fois qu'un incrément est envoyé par un thread. Le thread envoi son incrément de 0.1 au ThreadManager qui lui le relaie à l'UI.
 Avant de faire ça le manager doit adapté le pourcentage pour qu'il soit en rapport avec le pourcentage total. Il doit donc diviser l'incrément par le nombre de threads car ils ont chacun le même nombre de permutations à vérifier.
-
 
 ## Tests effectués
 
